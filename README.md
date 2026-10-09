@@ -1,4 +1,4 @@
-*[Ler a documentação em Português](https://github.com/relson/list/blob/master/README-pt.md)*
+*[Ler a documentação em Português](README-pt-BR.md)*
 # list
 A craigslist like app
 
