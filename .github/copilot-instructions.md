@@ -2,28 +2,32 @@
 
 ## Project snapshot
 
-- This repository documents how to build a Craigslist-inspired listing application through a step-by-step tutorial; the tutorial should let a reader reproduce the project by following its steps.
-- The initial implementation stack is Laravel with MySQL. The project owner already has a local MySQL installation.
-- This checkout currently contains only the documentation and license, not the Laravel application source or its dependency manifest. Treat Laravel as the tutorial's target, not as an already bootstrapped app.
+- The repository contains an English and Portuguese step-by-step tutorial (`README.md` and `README-pt-BR.md`) and the tutorial's Laravel application under `src/`.
+- The application is Laravel 13 (PHP ^8.3) with Laravel Breeze-style Blade authentication/profile pages, Vite, Tailwind CSS, and Alpine.js.
+- The intended database for the tutorial is MySQL; the project owner has a local MySQL installation. The current `src/.env.example` still defaults to SQLite, and PHPUnit tests use an in-memory SQLite database. Keep this distinction clear when documenting or changing database setup.
 
 ## Build, test, and lint commands
 
-- No project-defined build, test, or lint commands were found in this repository snapshot.
-- Composer is installed in the project owner's local environment, although its executable may not be available on the current session's `PATH`.
-- There is no `composer.json`, `package.json`, `phpunit.xml`, `artisan`, `.github/workflows`, or other automation config currently present.
-- When documenting commands for the tutorial, make clear which working directory they run from and keep them consistent with the Laravel version and files created in preceding steps.
-- Do not add application build/test commands as repository commands until the corresponding app and configuration exist.
+- Run Laravel commands from `src/`, where `artisan`, `composer.json`, and `package.json` live.
+- `composer setup` installs PHP and JavaScript dependencies, creates the local environment file/key, migrates, and builds assets.
+- `composer dev` starts the Laravel development process; `npm run dev` starts Vite by itself.
+- Run the PHP test suite with `composer test` or `php artisan test`. Run one test file with `php artisan test tests/Feature/ProfileTest.php`, or select a test by name with `php artisan test --filter=test_profile_page_is_displayed`.
+- Format/check PHP style with `vendor/bin/pint` / `vendor/bin/pint --test`.
+- Build frontend assets with `npm run build`. `package.json` has no lint script.
+- When documenting commands, state that they run from `src/` and keep them consistent with the Laravel app version and earlier tutorial steps.
 
 ## High-level architecture
 
-- The README is intended to be a chronological, reproducible guide to creating the application, rather than only a project overview.
-- The target application is built with Laravel and uses MySQL as its initial database.
-- Since no application code exists in this checkout, the tutorial is the source of truth for the intended architecture as it is established. Keep each step consistent with prior steps and the resulting Laravel project structure.
-- The local MySQL installation is an available prerequisite; tutorial setup should explain the database connection/configuration needed by Laravel without assuming or publishing local credentials.
+- `src/` is a conventional Laravel app: `routes/web.php` defines web and authenticated profile/dashboard routes and includes `routes/auth.php`; controllers and form requests live under `app/Http/`; Blade layouts, components, and pages are under `resources/views/`.
+- Authentication and profile management are the current functional baseline. Feature tests under `tests/Feature/` exercise these flows using `RefreshDatabase`; PHPUnit is configured for SQLite `:memory:`.
+- Composer scripts define application setup, development, and testing; npm/Vite handles CSS and JavaScript assets.
+- Treat the README files as a chronological, reproducible tutorial describing how this app was created. Keep tutorial steps consistent with the current source while preserving the order needed to recreate it.
 
 ## Key conventions
 
-- Keep `README.md` and `README-pt-BR.md` aligned as the tutorial evolves; preserve matching steps and outcomes across the English and Portuguese versions.
-- Write tutorial steps in the order a reader needs to perform them, including required configuration and commands, so following the guide produces the same result.
-- Do not assume a Laravel app exists in the repository until its source and bootstrap files are added. Distinguish commands run inside the tutorial-created app from commands run in this documentation repository.
-- Do not include real machine-specific database credentials in documentation; use clearly identified local configuration placeholders.
+- Keep `README.md` and `README-pt-BR.md` aligned in tutorial steps and outcomes.
+- Run commands that target the Laravel application from `src/`; distinguish them from repository-level documentation changes.
+- Follow the existing Laravel patterns: web routes delegate nontrivial behavior to controllers, request validation uses form request classes, and UI is composed from Blade views/components.
+- Preserve the test database isolation in `phpunit.xml`; do not require local MySQL credentials to run the test suite.
+- Use placeholders for local MySQL settings; never put machine-specific credentials in tracked docs or configuration.
+- Before changing Laravel application code, follow the setup and generated guidance in `src/AGENTS.md` and `src/CLAUDE.md` (including Laravel Boost setup when required).
